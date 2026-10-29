@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1F1D1F">
+  <meta name="description" content="Pastelería de diseño para tus ocasiones especiales. Tortas artesanales, sabores memorables y detalles hechos con dedicación.">
+  <title>Pastelería de Diseño | Dulces momentos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root{--gold:#D1AE6C;--green:#00A85A;--red:#EB3136;--orange:#F57A34;--yellow:#FDE621;--ink:#1F1D1F;--cream:#fffdf8}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;color:var(--ink);background:#f7f2e9}
+    h1,h2,h3,.script{font-family:'Playfair Display',serif}
+    .site-bg{position:fixed;inset:0;z-index:-2;background:linear-gradient(120deg,rgba(255,253,248,.94),rgba(255,253,248,.84)),url('fondo.jpg') center/cover no-repeat}
+    .site-bg:after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(209,174,108,.18) .7px,transparent .7px);background-size:18px 18px;opacity:.45}
+    .glass{background:rgba(255,255,255,.83);backdrop-filter:blur(14px);border:1px solid rgba(209,174,108,.3)}
+    .hero-panel{background:linear-gradient(115deg,rgba(31,29,31,.94),rgba(31,29,31,.78)),url('fondo.jpg') center/cover}
+    .gold-line{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+    .product-card{transition:transform .28s ease,box-shadow .28s ease;border:1px solid rgba(209,174,108,.28)}
+    .product-card:hover{transform:translateY(-6px);box-shadow:0 22px 45px rgba(31,29,31,.12)}
+    .product-photo{height:230px;object-fit:cover;transition:transform .5s ease}
+    .product-card:hover .product-photo{transform:scale(1.045)}
+    .photo-wrap{overflow:hidden;background:#f1e8d9}
+    .pill{border:1px solid rgba(209,174,108,.55);transition:all .2s}
+    .pill.active,.pill:hover{background:var(--ink);color:white;border-color:var(--ink)}
+    .btn-dark{background:var(--ink);color:white;transition:all .2s}
+    .btn-dark:hover{background:#3b343b;transform:translateY(-1px)}
+    .btn-gold{background:var(--gold);color:var(--ink);transition:all .2s}
+    .btn-gold:hover{filter:brightness(.96);transform:translateY(-1px)}
+    .modal-backdrop{background:rgba(20,17,20,.72);backdrop-filter:blur(7px)}
+    .modal-panel{animation:rise .25s ease-out}
+    @keyframes rise{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+    .qty-btn{width:30px;height:30px;border:1px solid #e6dccb;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+    .qty-btn:hover{background:#f4ead9}
+    .input-field{width:100%;border:1px solid #e3d9ca;border-radius:12px;background:white;padding:12px 14px;outline:none;transition:border .2s}
+    .input-field:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(209,174,108,.15)}
+    .nav-link{font-size:.88rem;font-weight:600;color:#4d464d}
+    .nav-link:hover{color:#a27a36}
+    .logo-img{width:auto;height:60px;max-width:190px;object-fit:contain}
+    .toast{animation:rise .2s ease}
+    @media(min-width:768px){.product-photo{height:250px}.logo-img{height:70px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+<div class="site-bg" aria-hidden="true"></div>
+<header class="sticky top-0 z-40 border-b border-[#D1AE6C]/30 bg-white/90 backdrop-blur-xl">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="h-[82px] flex items-center justify-between gap-4">
+      <a href="#inicio" class="flex items-center gap-3 min-w-0" aria-label="Inicio">
+        <img src="logo.jpg" alt="Logo de la pastelería" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span class="hidden script text-xl sm:text-2xl font-semibold">Dulces momentos</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-7">
+        <a class="nav-link" href="#coleccion">La colección</a>
+        <a class="nav-link" href="#filosofia">Nuestra esencia</a>
+        <a class="nav-link" href="#pedido">Haz tu pedido</a>
+      </nav>
+      <a href="#pedido" class="btn-dark rounded-full px-4 sm:px-5 py-3 text-sm font-bold flex items-center gap-2 whitespace-nowrap">
+        <i data-lucide="shopping-bag" class="w-4 h-4"></i><span class="hidden sm:inline">Crear mi pedido</span><span class="sm:hidden">Pedido</span>
+        <span id="header-count" class="bg-[#D1AE6C] text-[#1F1D1F] rounded-full w-5 h-5 text-xs flex items-center justify-center">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 md:pt-10">
+    <div class="hero-panel rounded-[28px] md:rounded-[38px] overflow-hidden relative">
+      <div class="absolute -right-10 -top-16 w-72 h-72 rounded-full border border-[#D1AE6C]/30"></div>
+      <div class="absolute right-12 -bottom-28 w-72 h-72 rounded-full border border-[#D1AE6C]/20"></div>
+      <div class="relative grid lg:grid-cols-[1.2fr_.8fr] gap-8 items-center px-6 py-12 sm:px-10 md:px-16 md:py-20">
+        <div class="max-w-2xl">
+          <div class="inline-flex items-center gap-2 text-[#D1AE6C] uppercase tracking-[.22em] text-[10px] sm:text-xs font-bold mb-5"><span class="w-8 h-px bg-[#D1AE6C]"></span> Repostería artesanal · Hecha con detalle</div>
+          <h1 class="text-white text-4xl sm:text-5xl md:text-6xl xl:text-7xl leading-[1.08] font-medium">Pastelería de diseño <em class="text-[#D1AE6C]">para tus ocasiones especiales</em></h1>
+          <p class="text-white/75 text-base md:text-lg leading-8 mt-6 max-w-xl">Hay momentos que merecen algo extraordinario. Descubre creaciones artesanales donde cada sabor, textura y detalle se convierte en un recuerdo para compartir.</p>
+          <div class="flex flex-wrap gap-3 mt-8">
+            <a href="#coleccion" class="btn-gold rounded-full px-6 py-3.5 font-bold inline-flex items-center gap-2">Explorar la colección <i data-lucide="arrow-down-right" class="w-4 h-4"></i></a>
+            <a href="#pedido" class="rounded-full px-6 py-3.5 border border-white/35 text-white font-semibold hover:bg-white/10 transition">Personalizar mi pedido</a>
+          </div>
+          <div class="flex flex-wrap gap-x-6 gap-y-3 mt-10 text-white/70 text-xs sm:text-sm">
+            <span class="flex items-center gap-2"><i data-lucide="heart" class="w-4 h-4 text-[#D1AE6C]"></i> Hecho con dedicación</span>
+            <span class="flex items-center gap-2"><i data-lucide="cake-slice" class="w-4 h-4 text-[#D1AE6C]"></i> Para celebrar en grande</span>
+          </div>
+        </div>
+        <div class="hidden lg:flex justify-center">
+          <div class="relative w-[330px] h-[380px]">
+            <div class="absolute inset-3 rounded-[180px_180px_28px_28px] border border-[#D1AE6C]/50 rotate-6"></div>
+            <div class="absolute inset-0 rounded-[180px_180px_28px_28px] border border-white/20 -rotate-3"></div>
+            <div class="absolute inset-5 rounded-[160px_160px_20px_20px] bg-gradient-to-br from-[#D1AE6C]/25 to-white/5 flex flex-col items-center justify-center text-center p-8">
+              <i data-lucide="flower-2" class="w-16 h-16 text-[#D1AE6C] stroke-[1]"></i>
+              <p class="script text-white text-4xl mt-6 italic">Un dulce<br>detalle</p>
+              <div class="gold-line w-24 my-5"></div>
+              <p class="text-white/65 text-xs tracking-[.25em] uppercase">Sabor · Arte · Celebración</p>
+            </div>
+            <span class="absolute top-12 -right-3 bg-[#D1AE6C] rounded-full w-14 h-14 flex items-center justify-center text-[#1F1D1F]"><i data-lucide="sparkles" class="w-6 h-6"></i></span>
+            <span class="absolute bottom-12 -left-4 bg-white rounded-full w-12 h-12 flex items-center justify-center text-[#EB3136]"><i data-lucide="heart" class="w-5 h-5"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="coleccion" class="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+    <div class="text-center max-w-2xl mx-auto">
+      <p class="text-[#a27a36] uppercase tracking-[.24em] text-[10px] sm:text-xs font-bold">Nuestra selección</p>
+      <h2 class="script text-4xl sm:text-5xl md:text-6xl mt-3">Pequeñas obras de arte</h2>
+      <p class="text-[#6d6468] mt-4 leading-7">Desde los clásicos que reconfortan hasta los sabores festivos que hacen especial cada encuentro.</p>
+      <div class="gold-line max-w-[130px] mx-auto mt-6"></div>
+    </div>
+    <div class="flex flex-wrap items-center justify-center gap-2 mt-8 mb-9" id="filters">
+      <button class="pill active rounded-full px-4 py-2 text-sm font-semibold" data-filter="todos">Toda la colección</button>
+      <button class="pill rounded-full px-4 py-2 text-sm font-semibold" data-filter="tortas">Tortas y tartas</button>
+      <button class="pill rounded-full px-4 py-2 text-sm font-semibold" data-filter="festivos">Edición festiva</button>
+      <button class="pill rounded-full px-4 py-2 text-sm font-semibold" data-filter="panaderia">Panadería artesanal</button>
+    </div>
+    <div id="product-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-7"></div>
+    <div class="text-center mt-10 text-sm text-[#6d6468] flex items-center justify-center gap-2"><i data-lucide="mouse-pointer-click" class="w-4 h-4 text-[#a27a36]"></i> Selecciona una creación para descubrir sus detalles o añadirla a tu pedido.</div>
+  </section>
+
+  <section id="filosofia" class="max-w-7xl mx-auto px-4 sm:px-6 pb-16 md:pb-24">
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="glass rounded-3xl p-6 md:p-8">
+        <div class="w-12 h-12 rounded-2xl bg-[#D1AE6C]/20 flex items-center justify-center text-[#9b722e]"><i data-lucide="hand-heart" class="w-6 h-6"></i></div>
+        <h3 class="script text-2xl mt-5">Hecho con cariño</h3><p class="text-sm text-[#6d6468] leading-6 mt-2">Cada preparación busca unir el cuidado artesanal con una presentación especial.</p>
+      </div>
+      <div class="glass rounded-3xl p-6 md:p-8">
+        <div class="w-12 h-12 rounded-2xl bg-[#00A85A]/10 flex items-center justify-center text-[#008848]"><i data-lucide="chef-hat" class="w-6 h-6"></i></div>
+        <h3 class="script text-2xl mt-5">Sabor que permanece</h3><p class="text-sm text-[#6d6468] leading-6 mt-2">Texturas, ingredientes y combinaciones pensadas para disfrutar sin prisa.</p>
+      </div>
+      <div class="glass rounded-3xl p-6 md:p-8">
+        <div class="w-12 h-12 rounded-2xl bg-[#EB3136]/10 flex items-center justify-center text-[#c9272d]"><i data-lucide="gift" class="w-6 h-6"></i></div>
+        <h3 class="script text-2xl mt-5">Un detalle memorable</h3><p class="text-sm text-[#6d6468] leading-6 mt-2">Un cumpleaños, una reunión o un regalo: siempre hay una razón para compartir algo dulce.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="pedido" class="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
+    <div class="grid lg:grid-cols-[.85fr_1.15fr] gap-6 items-start">
+      <div class="hero-panel rounded-[28px] p-7 md:p-10 text-white">
+        <p class="text-[#D1AE6C] uppercase tracking-[.22em] text-xs font-bold">Tu próxima celebración</p>
+        <h2 class="script text-4xl md:text-5xl mt-3">Hagamos algo delicioso.</h2>
+        <p class="text-white/70 leading-7 mt-4">Arma tu selección, cuéntanos a quién va dirigida y envíanos tu pedido por WhatsApp. Confirmaremos contigo los detalles finales.</p>
+        <div class="gold-line my-7"></div>
+        <div class="flex gap-3 items-start"><i data-lucide="check-circle-2" class="w-5 h-5 text-[#D1AE6C] mt-1 shrink-0"></i><p class="text-sm text-white/80">El total se calcula automáticamente con los productos y cantidades seleccionadas.</p></div>
+        <div class="flex gap-3 items-start mt-4"><i data-lucide="message-circle" class="w-5 h-5 text-[#D1AE6C] mt-1 shrink-0"></i><p class="text-sm text-white/80">El botón prepara un mensaje con el detalle de tu pedido para enviarlo a WhatsApp.</p></div>
+        <div class="mt-8 rounded-2xl bg-white/10 border border-white/10 p-5">
+          <p class="text-white/60 text-xs uppercase tracking-[.18em]">Valor estimado de tu selección</p>
+          <p id="order-total-large" class="text-3xl font-bold mt-2">$0</p>
+          <p class="text-white/50 text-xs mt-1">COP · El pedido se confirma por WhatsApp</p>
+        </div>
+      </div>
+      <div class="glass rounded-[28px] p-5 sm:p-7 md:p-9">
+        <div class="flex items-center justify-between gap-4 mb-6">
+          <div><p class="text-[#a27a36] uppercase tracking-[.2em] text-[10px] font-bold">Paso 01 · Selección</p><h3 class="script text-3xl mt-1">Tu pedido</h3></div>
+          <span id="cart-badge" class="text-xs font-bold bg-[#D1AE6C]/25 rounded-full px-3 py-2">0 productos</span>
+        </div>
+        <div id="cart-items" class="space-y-3"></div>
+        <div id="empty-cart" class="rounded-2xl border border-dashed border-[#D1AE6C] p-6 text-center text-sm text-[#6d6468]">
+          <i data-lucide="shopping-basket" class="w-8 h-8 mx-auto mb-2 text-[#a27a36]"></i>Tu selección está vacía. Explora la colección y añade tus favoritos.
+          <a href="#coleccion" class="block underline underline-offset-4 font-bold mt-3">Ver productos</a>
+        </div>
+        <div class="mt-5 rounded-2xl bg-white/80 border border-[#eadfce] p-4">
+          <div class="flex items-center justify-between"><span class="text-sm text-[#6d6468]">Resumen del pedido</span><span class="text-xs text-[#a27a36]">COP</span></div>
+          <div class="flex items-end justify-between mt-2"><span class="font-semibold">Total estimado</span><strong id="order-total" class="text-2xl">$0</strong></div>
+          <div class="mt-4 h-2 rounded-full bg-[#eee5d8] overflow-hidden"><div id="cart-progress" class="h-full bg-[#D1AE6C] rounded-full transition-all" style="width:0%"></div></div>
+          <p class="text-[11px] text-[#8b8184] mt-2">La barra representa la cantidad de productos incluidos en tu selección.</p>
+        </div>
+        <div class="mt-8">
+          <p class="text-[#a27a36] uppercase tracking-[.2em] text-[10px] font-bold">Paso 02 · Datos de entrega</p>
+          <h3 class="script text-2xl mt-1 mb-5">¿A quién le endulzamos el día?</h3>
+          <form id="order-form" class="space-y-4">
+            <div><label for="customer-name" class="block text-sm font-semibold mb-1.5">Nombre completo *</label><input id="customer-name" class="input-field" autocomplete="name" required placeholder="Tu nombre"></div>
+            <div><label for="customer-address" class="block text-sm font-semibold mb-1.5">Dirección de entrega *</label><input id="customer-address" class="input-field" autocomplete="street-address" required placeholder="Calle, carrera, barrio y ciudad"></div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div><label for="customer-phone" class="block text-sm font-semibold mb-1.5">Teléfono (opcional)</label><input id="customer-phone" class="input-field" autocomplete="tel" inputmode="tel" placeholder="Tu número de contacto"></div>
+              <div><label for="delivery-date" class="block text-sm font-semibold mb-1.5">Fecha deseada (opcional)</label><input id="delivery-date" type="date" class="input-field"></div>
+            </div>
+            <div><label for="order-notes" class="block text-sm font-semibold mb-1.5">Notas para tu pedido (opcional)</label><textarea id="order-notes" class="input-field min-h-[88px] resize-y" placeholder="Mensaje, ocasión especial o indicaciones adicionales"></textarea></div>
+            <p id="form-error" class="hidden text-sm text-[#c9272d] font-semibold"></p>
+            <button type="submit" class="w-full rounded-full bg-[#00A85A] hover:bg-[#008e4c] text-white font-bold py-4 px-5 flex items-center justify-center gap-3 transition shadow-lg shadow-green-900/10"><i data-lucide="message-circle" class="w-5 h-5"></i> Enviar mi pedido por WhatsApp <i data-lucide="arrow-up-right" class="w-4 h-4"></i></button>
+            <p class="text-[11px] leading-5 text-[#8b8184] text-center">Al continuar, WhatsApp se abrirá con el mensaje listo. Deberás pulsar “Enviar” dentro de WhatsApp para completar el envío.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="bg-[#1F1D1F] text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-12">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-4">
+        <img src="logo.jpg" alt="Logo de la pastelería" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span class="hidden script text-2xl">Dulces momentos</span>
+        <div class="hidden sm:block w-px h-10 bg-white/20"></div>
+        <p class="hidden sm:block text-white/60 text-xs leading-5">Pastelería de diseño<br>para ocasiones especiales</p>
+      </div>
+      <a href="#inicio" class="text-sm text-white/70 hover:text-[#D1AE6C] flex items-center gap-2">Volver al inicio <i data-lucide="arrow-up" class="w-4 h-4"></i></a>
+    </div>
+    <div class="gold-line my-7"></div>
+    <div class="flex flex-col sm:flex-row justify-between gap-2 text-xs text-white/45"><span>© <span id="year"></span> · Cada detalle cuenta.</span><span>Elaborado para compartir momentos dulces.</span></div>
+  </div>
+</footer>
+
+<div id="product-modal" class="hidden fixed inset-0 z-50 modal-backdrop p-3 sm:p-6 items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-panel bg-[#fffdf8] rounded-[26px] sm:rounded-[32px] overflow-hidden max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl relative">
+    <button id="modal-close" class="absolute right-4 top-4 z-10 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow" aria-label="Cerrar detalle"><i data-lucide="x" class="w-5 h-5"></i></button>
+    <div class="grid md:grid-cols-2">
+      <div class="min-h-[230px] md:min-h-[480px] bg-[#f0e5d5]"><img id="modal-image" src="" alt="" class="w-full h-full min-h-[260px] md:min-h-[480px] object-cover"></div>
+      <div class="p-6 sm:p-9 md:p-10 flex flex-col">
+        <p id="modal-category" class="text-[#a27a36] uppercase tracking-[.2em] text-[10px] font-bold"></p>
+        <h2 id="modal-title" class="script text-3xl sm:text-4xl mt-3 leading-tight"></h2>
+        <p id="modal-description" class="text-[#6d6468] leading-7 mt-5"></p>
+        <div class="gold-line w-24 my-6"></div>
+        <div class="mt-auto">
+          <p id="modal-price" class="text-3xl font-bold"></p>
+          <p class="text-xs text-[#8b8184] mt-1">Precio en pesos colombianos (COP)</p>
+          <div class="flex gap-3 mt-6">
+            <button id="modal-add" class="btn-dark rounded-full flex-1 py-3.5 font-bold flex items-center justify-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> Añadir al pedido</button>
+            <button id="modal-order" class="btn-gold rounded-full px-5 py-3.5 font-bold" aria-label="Ir al pedido"><i data-lucide="shopping-bag" class="w-5 h-5"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="toast" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-[60] bg-[#1F1D1F] text-white rounded-full px-5 py-3 shadow-xl text-sm font-semibold items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-[#D1AE6C]"></i><span id="toast-message">Añadido a tu pedido</span></div>
+
+<script>
+const products = [
+ {id:'chocofresa',name:'Sinfonía de Cacao y Frutos del Bosque',image:'chocofresa.jpg',price:80000,category:'tortas',label:'Tortas y tartas',description:'Bizcocho esponjoso de cacao fino de aroma, delicadamente espolvoreado con un velo de azúcar glass. Coronado con fresas frescas seleccionadas a mano y un toque de arándanos silvestres, creando el equilibrio perfecto entre la intensidad del chocolate y la frescura ácida de los frutos rojos.',tag:'Favorito de la casa'},
+ {id:'chocolate',name:'Tarta Clásica de Chocolate Intenso',image:'chocolate.jpg',price:90000,category:'tortas',label:'Tortas y tartas',description:'Bizcocho húmedo de cacao puro cubierto con una generosa y sedosa capa de ganache de chocolate artesanal, con una textura rústica y elegante que evoca la tradición de la alta pastelería casera.',tag:'Clásico artesanal'},
+ {id:'mantecada',name:'Mantecada Tradicional de Autor',image:'mantecada.jpg',price:30000,category:'tortas',label:'Tortas y tartas',description:'Exquisito bizcocho artesanal de miga firme y dorada, elaborado con mantequilla pura y un toque de vainilla, envuelto con delicadeza rústica y presentado con un sello de distinción para el deleite más exclusivo.',tag:'Tradición'},
+ {id:'mym',name:'Tarta Festiva de Chocolate y Confites',image:'mym.jpg',price:85000,category:'tortas',label:'Tortas y tartas',description:'Bizcocho clásico de chocolate cubierto con una intensa y brillante capa de ganache, artísticamente decorado con una colorida selección de crujientes botones de chocolate que aportan un toque lúdico y sofisticado a la alta pastelería.',tag:'Para celebrar'},
+ {id:'navidad1',name:'Delicia Navideña de Chocolate de Autor',image:'navidad1.jpg',price:95000,category:'festivos',label:'Edición festiva',description:'Exquisito bizcocho especiado de chocolate, finamente presentado como un regalo de alta pastelería con un envoltorio artesanal de celofán estrellado, delicada puntilla y un festivo lazo bicolor que evoca la magia y la elegancia de la temporada navideña.',tag:'Edición navideña'},
+ {id:'navidad2',name:'Bizcocho Navideño de Nueces y Especias',image:'navidad2.jpg',price:90000,category:'festivos',label:'Edición festiva',description:'Tradicional pastel de alta pastelería enriquecido con crujientes nueces seleccionadas, presentado con un elegante envoltorio artesanal de celofán festivo y un delicado lazo de temporada que realza su espíritu de regalo exclusivo.',tag:'Regalo especial'},
+ {id:'navidad3',name:'Bizcocho Navideño de Chocolate y Arequipe',image:'navidad3.jpg',price:95000,category:'festivos',label:'Edición festiva',description:'Deliciosa tarta festiva de miga húmeda elaborada con cacao y un corazón cremoso de arequipe artesanal, finamente espolvoreada con azúcar glass y decorada con motivos navideños que evocan la calidez y el encanto de la temporada.',tag:'Sabor festivo'},
+ {id:'pancasero',name:'Panes Rústicos de Abuela',image:'pancasero.jpg',price:30000,category:'panaderia',label:'Panadería artesanal',description:'Selección de panecillos artesanales horneados en casa, de corteza crujiente ligeramente espolvoreada con harina y miga suave, que evocan la calidez y el auténtico sabor de la tradición panadera de alta calidad.',tag:'Recién horneado'},
+ {id:'panmiel',name:'Pan de Miel Artesanal',image:'panmiel.jpg',price:30000,category:'panaderia',label:'Panadería artesanal',description:'Exquisito pan de miga suave y dorada endulzado con miel natural de abejas, presentado con un elegante empaque rústico de papel kraft y cordel artesanal, ideal para acompañar momentos selectos con un toque de distinción.',tag:'Dulzura natural'}
+];
+const cart = {};
+let activeProduct = null;
+let toastTimer;
+const money = n => '$' + Number(n).toLocaleString('es-CO');
+const grid = document.getElementById('product-grid');
+const modal = document.getElementById('product-modal');
+function renderProducts(filter='todos'){
+ const filtered = products.filter(p=>filter==='todos'||p.category===filter);
+ grid.innerHTML = filtered.map(p=>`
+  <article class="product-card bg-white/90 rounded-[24px] overflow-hidden flex flex-col">
+   <button class="photo-wrap relative block w-full text-left" data-detail="${p.id}" aria-label="Ver detalles de ${p.name}">
+    <img src="${p.image}" alt="${p.name}" loading="lazy" class="product-photo w-full" onerror="this.onerror=null;this.src='data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"800\" height=\"600\"><rect width=\"100%\" height=\"100%\" fill=\"#eee3d2\"/><text x=\"50%\" y=\"48%\" text-anchor=\"middle\" font-family=\"Georgia\" font-size=\"34\" fill=\"#8d744e\">Pastelería artesanal</text><text x=\"50%\" y=\"58%\" text-anchor=\"middle\" font-family=\"Arial\" font-size=\"18\" fill=\"#8d744e\">${p.name}</text></svg>`)}'">
+    <span class="absolute top-4 left-4 rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-bold tracking-wide text-[#6b5330]">${p.tag}</span>
+    <span class="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-white/95 flex items-center justify-center shadow"><i data-lucide="expand" class="w-4 h-4"></i></span>
+   </button>
+   <div class="p-5 sm:p-6 flex flex-col flex-1">
+    <p class="text-[10px] uppercase tracking-[.18em] text-[#a27a36] font-bold">${p.label}</p>
+    <button data-detail="${p.id}" class="text-left"><h3 class="script text-[23px] leading-snug mt-2 hover:text-[#9b722e] transition">${p.name}</h3></button>
+    <p class="text-sm text-[#766d70] leading-6 mt-3 line-clamp-3">${p.description}</p>
+    <div class="mt-auto pt-5 flex items-center justify-between gap-3">
+     <span class="text-xl font-bold">${money(p.price)}</span>
+     <button data-add="${p.id}" class="btn-dark rounded-full px-4 py-2.5 text-xs font-bold flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> Añadir</button>
+    </div>
+   </div>
+  </article>`).join('');
+ lucide.createIcons();
+}
+function countItems(){return Object.values(cart).reduce((a,b)=>a+b,0)}
+function total(){return products.reduce((sum,p)=>sum+p.price*(cart[p.id]||0),0)}
+function renderCart(){
+ const entries=products.filter(p=>cart[p.id]);
+ const count=countItems(), sum=total();
+ document.getElementById('header-count').textContent=count;
+ document.getElementById('cart-badge').textContent=`${count} ${count===1?'producto':'productos'}`;
+ document.getElementById('order-total').textContent=money(sum);
+ document.getElementById('order-total-large').textContent=money(sum);
+ document.getElementById('empty-cart').classList.toggle('hidden',entries.length>0);
+ document.getElementById('cart-items').innerHTML=entries.map(p=>`
+  <div class="flex gap-3 items-center bg-white/80 border border-[#eadfce] rounded-2xl p-3">
+   <img src="${p.image}" alt="" class="w-[62px] h-[62px] object-cover rounded-xl bg-[#eee3d2]" onerror="this.style.opacity='.2'">
+   <div class="min-w-0 flex-1"><p class="text-sm font-bold leading-snug">${p.name}</p><p class="text-xs text-[#8b8184] mt-1">${money(p.price)} c/u</p><p class="text-sm font-bold mt-1">${money(p.price*cart[p.id])}</p></div>
+   <div class="flex items-center gap-2"><button class="qty-btn" data-change="${p.id}" data-delta="-1" aria-label="Restar uno">−</button><span class="text-sm font-bold w-4 text-center">${cart[p.id]}</span><button class="qty-btn" data-change="${p.id}" data-delta="1" aria-label="Sumar uno">+</button></div>
+   <button data-remove="${p.id}" class="text-[#a29a9b] hover:text-[#EB3136] p-1" aria-label="Quitar ${p.name}"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+  </div>`).join('');
+ document.getElementById('cart-progress').style.width=Math.min(100,count/10*100)+'%';
+ lucide.createIcons();
+ if(window.orderChart){window.orderChart.data.labels=entries.map(p=>p.name);window.orderChart.data.datasets[0].data=entries.map(p=>p.price*cart[p.id]);window.orderChart.update();}
+}
+function showToast(message){
+ const toast=document.getElementById('toast');document.getElementById('toast-message').textContent=message;
+ toast.classList.remove('hidden');toast.classList.add('flex');clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>{toast.classList.add('hidden');toast.classList.remove('flex')},2200);
+}
+function addToCart(id){cart[id]=(cart[id]||0)+1;renderCart();showToast('Añadido a tu pedido');}
+function openModal(id){
+ activeProduct=products.find(p=>p.id===id);if(!activeProduct)return;
+ document.getElementById('modal-image').src=activeProduct.image;
+ document.getElementById('modal-image').alt=activeProduct.name;
+ document.getElementById('modal-category').textContent=activeProduct.label+' · '+activeProduct.tag;
+ document.getElementById('modal-title').textContent=activeProduct.name;
+ document.getElementById('modal-description').textContent=activeProduct.description;
+ document.getElementById('modal-price').textContent=money(activeProduct.price);
+ modal.classList.remove('hidden');modal.classList.add('flex');document.body.style.overflow='hidden';
+ lucide.createIcons();document.getElementById('modal-close').focus();
+}
+function closeModal(){modal.classList.add('hidden');modal.classList.remove('flex');document.body.style.overflow='';}
+document.addEventListener('click',e=>{
+ const detail=e.target.closest('[data-detail]');if(detail){openModal(detail.dataset.detail);return}
+ const add=e.target.closest('[data-add]');if(add){addToCart(add.dataset.add);return}
+ const change=e.target.closest('[data-change]');if(change){const id=change.dataset.change;cart[id]=Math.max(0,(cart[id]||0)+Number(change.dataset.delta));if(!cart[id])delete cart[id];renderCart();return}
+ const remove=e.target.closest('[data-remove]');if(remove){delete cart[remove.dataset.remove];renderCart();return}
+});
+document.getElementById('filters').addEventListener('click',e=>{
+ const btn=e.target.closest('[data-filter]');if(!btn)return;
+ document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',b===btn));renderProducts(btn.dataset.filter);
+});
+document.getElementById('modal-close').addEventListener('click',closeModal);
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+document.getElementById('modal-add').addEventListener('click',()=>{if(activeProduct)addToCart(activeProduct.id);closeModal()});
+document.getElementById('modal-order').addEventListener('click',()=>{closeModal();document.getElementById('pedido').scrollIntoView({behavior:'smooth'})});
+document.getElementById('order-form').addEventListener('submit',e=>{
+ e.preventDefault();
+ const error=document.getElementById('form-error');
+ if(countItems()===0){error.textContent='Añade al menos un producto antes de enviar tu pedido.';error.classList.remove('hidden');document.getElementById('coleccion').scrollIntoView({behavior:'smooth'});return}
+ const name=document.getElementById('customer-name').value.trim();
+ const address=document.getElementById('customer-address').value.trim();
+ if(!name||!address){error.textContent='Por favor, completa tu nombre y la dirección de entrega.';error.classList.remove('hidden');return}
+ error.classList.add('hidden');
+ const lines=products.filter(p=>cart[p.id]).map(p=>`• ${p.name} x ${cart[p.id]} — ${money(p.price*cart[p.id])}`);
+ const phone=document.getElementById('customer-phone').value.trim();
+ const date=document.getElementById('delivery-date').value;
+ const notes=document.getElementById('order-notes').value.trim();
+ const message=[
+  'Mi Pedido es:',
+  '',
+  `Nombre: ${name}`,
+  `Dirección de entrega: ${address}`,
+  phone?`Teléfono: ${phone}`:null,
+  date?`Fecha deseada: ${date}`:null,
+  '',
+  'PRODUCTOS:',
+  ...lines,
+  '',
+  `TOTAL ESTIMADO: ${money(total())} COP`,
+  notes?`Notas: ${notes}`:null,
+  '',
+  'Por favor, confirmen disponibilidad y detalles de entrega. ¡Gracias!'
+ ].filter(x=>x!==null).join('\n');
+ const url='https://wa.me/573147911387?text='+encodeURIComponent(message);
+ window.open(url,'_blank','noopener,noreferrer');
+});
+document.getElementById('year').textContent=new Date().getFullYear();
+renderProducts();renderCart();lucide.createIcons();
+</script>
+</body>
+</html>
